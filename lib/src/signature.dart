@@ -35,6 +35,12 @@ class Signature {
     return List<String>.generate(
         asn1.length, (i) => asn1[i].toRadixString(16).padLeft(2, '0')).join();
   }
+
+  /// [toString] equals to [toASN1Hex]
+  @override
+  String toString() {
+    return toASN1Hex();
+  }
 }
 
 /// [signature] signs a hash (which should be the result of hashing a larger message)
@@ -56,6 +62,7 @@ Signature signature(PrivateKey priv, List<int> hash) {
   late BigInt k, kInv;
   while (true) {
     while (true) {
+      // TODO: use csprng
       rand =
           List<int>.generate(byteLen, (i) => random.nextInt(256)); // bytes of k
       k = BigInt.parse(
