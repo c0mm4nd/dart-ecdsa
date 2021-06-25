@@ -1,4 +1,4 @@
-import 'package:ecdsa/src/signature.dart';
+import 'package:ecdsa/ecdsa.dart';
 import 'package:ecdsa/src/utils.dart';
 import 'package:elliptic/elliptic.dart';
 import 'package:test/test.dart';
@@ -53,8 +53,50 @@ void main() {
       var hash = List<int>.generate(hashHex.length ~/ 2,
           (i) => int.parse(hashHex.substring(i * 2, i * 2 + 2), radix: 16));
 
-      expect(hashToInt(hash, ec).toString(),
+      expect(bitsToInt(hash, ec.n.bitLength).toString(),
           '83814198383102558219731078260892729932246618004265700685467928187377105751529');
+    });
+
+    test('test rfc6979', () {
+      var priv = PrivateKey(
+          getS256(),
+          BigInt.parse(
+              '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
+              radix: 16));
+      var hash = List<int>.generate(
+          32,
+          (index) => int.parse(
+              'b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9'
+                  .substring(2 * index, 2 * index + 2),
+              radix: 16));
+      var sig = deterministicSign(priv, hash);
+
+      expect(
+          sig.R.toRadixString(16).padLeft(64, '0') +
+              sig.S.toRadixString(16).padLeft(64, '0'),
+          equals(
+              '837512046397589e934289c31e7515c1a53bfe7fb2024b918be33e07e803d7674d7f7d1d15a93e5fffdd5f0ba1bb5ed0bae2a0478822cc3e749fff8cd0551cd9'));
+    });
+
+    test('test rfc6979_2', () {
+      var priv = PrivateKey(
+          getS256(),
+          BigInt.parse(
+              'd07b57eb3cd1a308b2fa04d97552f00b1d59efc0200affd1edafc98700ce3290',
+              radix: 16));
+      var hash = List<int>.generate(
+          32,
+          (index) => int.parse(
+              '674a0b724e6573e40e2d3535e45ad0e377b885e94dae79ecc4fda502d6f071c8'
+                  .substring(2 * index, 2 * index + 2),
+              radix: 16));
+      var sig = deterministicSign(priv, hash);
+
+      expect(
+          sig.R.toRadixString(16).padLeft(64, '0') +
+              sig.S.toRadixString(16).padLeft(64, '0'),
+          equals(
+              'aa246d05986a32029b7c0875f7667583c6dc1a7a78403390b6e692f24cd122c8255ef7f303c4922da03b2329952782980fc4da5a305196648884e8a5a7f441a8'));
     });
   });
 }

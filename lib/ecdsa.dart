@@ -6,3 +6,5 @@
 library ecdsa;
 
 export 'src/signature.dart';
+export 'src/ecdsa.dart';
+export 'src/deterministic.dart';
