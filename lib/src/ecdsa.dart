@@ -24,7 +24,7 @@ Signature signature(PrivateKey priv, List<int> hash) {
   late BigInt k, kInv;
   while (true) {
     while (true) {
-      // TODO: use csprng
+      // note: no need to use csprng. Random.secure() is already an implement of csprng
       rand =
           List<int>.generate(byteLen, (i) => random.nextInt(256)); // bytes of k
       k = BigInt.parse(
