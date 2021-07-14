@@ -22,42 +22,34 @@ class Signature {
   }
 
   Signature.fromCompactHex(String compactHex) {
-    R = BigInt.parse(compactHex.substring(0, 32), radix: 16);
-    S = BigInt.parse(compactHex.substring(32, 64), radix: 16);
+    R = BigInt.parse(compactHex.substring(0, 64), radix: 16);
+    S = BigInt.parse(compactHex.substring(64, 128), radix: 16);
   }
 
+  /// parsing the ECDSA signatures with the more strict
+  /// Distinguished Encoding Rules (DER) of ISO/IEC 8825-1
   Signature.fromASN1(List<int> asn1Bytes) {
-    var p = ASN1Sequence.decode(asn1Bytes);
-    R = (p.children[0] as ASN1Integer).value;
-    S = (p.children[1] as ASN1Integer).value;
+    _parseASN1(asn1Bytes);
   }
 
   /// [fromDER] is same to [fromASN1]
   /// parsing the ECDSA signatures with the more strict
   /// Distinguished Encoding Rules (DER) of ISO/IEC 8825-1
   Signature.fromDER(List<int> asn1Bytes) {
-    var p = ASN1Sequence.decode(asn1Bytes);
-    R = (p.children[0] as ASN1Integer).value;
-    S = (p.children[1] as ASN1Integer).value;
+    _parseASN1(asn1Bytes);
   }
 
+  /// parsing the ECDSA signatures with the more strict
+  /// Distinguished Encoding Rules (DER) of ISO/IEC 8825-1
   Signature.fromASN1Hex(String asn1Hex) {
-    var asn1Bytes = List<int>.generate(asn1Hex.length ~/ 2,
-        (i) => int.parse(asn1Hex.substring(i * 2, i * 2 + 2), radix: 16));
-    var p = ASN1Sequence.decode(asn1Bytes);
-    R = (p.children[0] as ASN1Integer).value;
-    S = (p.children[1] as ASN1Integer).value;
+    _parseASN1Hex(asn1Hex);
   }
 
   /// [fromDERHex] is same to [fromASN1Hex]
   /// parsing the ECDSA signatures with the more strict
   /// Distinguished Encoding Rules (DER) of ISO/IEC 8825-1
   Signature.fromDERHex(String asn1Hex) {
-    var asn1Bytes = List<int>.generate(asn1Hex.length ~/ 2,
-        (i) => int.parse(asn1Hex.substring(i * 2, i * 2 + 2), radix: 16));
-    var p = ASN1Sequence.decode(asn1Bytes);
-    R = (p.children[0] as ASN1Integer).value;
-    S = (p.children[1] as ASN1Integer).value;
+    _parseASN1Hex(asn1Hex);
   }
 
   List<int> toCompact() {
@@ -98,5 +90,19 @@ class Signature {
   @override
   String toString() {
     return toASN1Hex();
+  }
+
+  void _parseASN1(List<int> asn1Bytes) {
+    var p = ASN1Sequence.decode(asn1Bytes);
+    R = (p.children[0] as ASN1Integer).value;
+    S = (p.children[1] as ASN1Integer).value;
+  }
+
+  void _parseASN1Hex(String asn1Hex) {
+    var asn1Bytes = List<int>.generate(asn1Hex.length ~/ 2,
+        (i) => int.parse(asn1Hex.substring(i * 2, i * 2 + 2), radix: 16));
+    var p = ASN1Sequence.decode(asn1Bytes);
+    R = (p.children[0] as ASN1Integer).value;
+    S = (p.children[1] as ASN1Integer).value;
   }
 }

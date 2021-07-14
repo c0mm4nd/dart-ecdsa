@@ -1,3 +1,8 @@
+## 0.0.3
+
+- fix Signature.fromCompactHex
+- 
+
 ## 0.0.2
 
 - Add deterministicSign
