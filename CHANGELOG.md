@@ -1,7 +1,10 @@
+## 0.0.4
+
+- add ethereum sign (with v)
+
 ## 0.0.3
 
 - fix Signature.fromCompactHex
-- 
 
 ## 0.0.2
 

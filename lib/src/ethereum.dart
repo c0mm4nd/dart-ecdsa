@@ -37,12 +37,12 @@ class EthSignature extends Signature {
   }
 }
 
-/// [deterministicSign] generates a deterministic ECDSA signature according to
+/// [ethereumSign] generates a deterministic ECDSA signature according to
 /// RFC 6979 and BIP 62
 /// https://datatracker.ietf.org/doc/html/rfc6979
 /// https://ethereum.stackexchange.com/questions/65910/is-signatures-from-web3-eth-personal-sign-deterministic-and-a-safe-to-be-used-as
 /// Ethereum uses the deterministic (and elliptic-curve) variant of DSA.
-EthSignature deterministicSign(PrivateKey priv, List<int> hash) {
+EthSignature ethereumSign(PrivateKey priv, List<int> hash) {
   var k = generateSecret(priv.curve.n, priv.D, hash);
   var inv = k.modInverse(priv.curve.n);
   var hexK = k.toRadixString(16).padLeft((k.bitLength + 7) ~/ 8 * 2, '0');
