@@ -1,3 +1,8 @@
+## 0.1.0
+
+- update sdk limit
+- upgrade dart-elliptic
+
 ## 0.0.4
 
 - add ethereum sign (with v)
