@@ -98,5 +98,33 @@ void main() {
           equals(
               'aa246d05986a32029b7c0875f7667583c6dc1a7a78403390b6e692f24cd122c8255ef7f303c4922da03b2329952782980fc4da5a305196648884e8a5a7f441a8'));
     });
+
+    test('ethereum sign', () {
+      var hash = List<int>.generate(
+          32,
+          (index) => int.parse(
+              'daf5a779ae972f972197303d7b574746c7ef83eadac0f2791ad23db92e4c8e53'
+                  .substring(2 * index, 2 * index + 2),
+              radix: 16));
+      var priv = PrivateKey(
+          getS256(),
+          BigInt.parse(
+              '4646464646464646464646464646464646464646464646464646464646464646',
+              radix: 16));
+
+      var sig = ethereumSign(priv, hash);
+
+      // example from https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md
+      expect(sig.getEIP155V(1), equals(37));
+      expect(sig.getV(), equals(27));
+      expect(
+          sig.R,
+          equals(BigInt.parse(
+              '18515461264373351373200002665853028612451056578545711640558177340181847433846')));
+      expect(
+          sig.S,
+          BigInt.parse(
+              '46948507304638947509940763649030358759909902576025900602547168820602576006531'));
+    });
   });
 }
