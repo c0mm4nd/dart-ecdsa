@@ -113,10 +113,12 @@ void main() {
               radix: 16));
 
       var sig = ethereumSign(priv, hash);
+      var recoveredPubKey = ecRecover(getS256(), sig, hash);
 
       // example from https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md
       expect(sig.getEIP155V(1), equals(37));
       expect(sig.getV(), equals(27));
+      expect(recoveredPubKey, equals(priv.publicKey));
       expect(
           sig.R,
           equals(BigInt.parse(
@@ -141,7 +143,11 @@ void main() {
               radix: 16));
 
       var sig = ethereumSign(priv, hash);
+      var recoveredPubKey = ecRecover(getS256(), sig, hash);
+
       print(sig.toEthCompactHex());
+
+      expect(recoveredPubKey, equals(priv.publicKey));
       expect(sig.getEIP155V(1), equals(37));
       expect(sig.getV(), equals(27));
       expect(
