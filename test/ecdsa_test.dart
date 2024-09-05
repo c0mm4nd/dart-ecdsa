@@ -126,5 +126,36 @@ void main() {
           BigInt.parse(
               '46948507304638947509940763649030358759909902576025900602547168820602576006531'));
     });
+
+    test('ethereum sign #6', () {
+      var hash = List<int>.generate(
+          32,
+          (index) => int.parse(
+              'b6e16d27ac5ab427a7f68900ac5559ce272dc6c37c82b3e052246c82244c50e4'
+                  .substring(2 * index, 2 * index + 2),
+              radix: 16));
+      var priv = PrivateKey(
+          getS256(),
+          BigInt.parse(
+              'e4d7f99de955728c9921a3de9f2bcdaeb54938da0b1179fdd2275d7ce09dd002',
+              radix: 16));
+
+      var sig = ethereumSign(priv, hash);
+      print(sig.toEthCompactHex());
+      expect(sig.getEIP155V(1), equals(37));
+      expect(sig.getV(), equals(27));
+      expect(
+          sig.R,
+          equals(BigInt.parse(
+              '0x96df6608b777f7642e741b97843475ab29981bca31c2f47d657b43ff7b460d21')));
+      expect(
+          sig.S,
+          BigInt.parse(
+              '0x48def6cd02fb866ac45f736dcc6829f1ca34c1f112805eae0c73981aecee9428'));
+      expect(
+          EthSignature.fromRSV(sig.R, sig.S, sig.getV()).toEthCompactHex(),
+          equals(
+              '96df6608b777f7642e741b97843475ab29981bca31c2f47d657b43ff7b460d2148def6cd02fb866ac45f736dcc6829f1ca34c1f112805eae0c73981aecee94281b'));
+    });
   });
 }

@@ -53,7 +53,7 @@ EthSignature ethereumSign(PrivateKey priv, List<int> hash) {
     throw Exception('calculated R is zero');
   }
   var y = p.Y % priv.curve.n;
-  var v = (y % BigInt.two).toInt();
+  var v = (y & BigInt.one).toInt();
 
   var e = bitsToInt(hash, priv.curve.n.bitLength);
   var s = priv.D * r + e;
@@ -61,6 +61,8 @@ EthSignature ethereumSign(PrivateKey priv, List<int> hash) {
 
   if (s > (priv.curve.n >> 1)) {
     s = priv.curve.n - s;
+    // https://ethereum.stackexchange.com/a/53182
+    v ^= 1;
   }
 
   if (s.sign == 0) {
