@@ -1,6 +1,6 @@
 name: ecdsa
 description: Package ecdsa implements the Elliptic Curve Digital Signature Algorithm, as defined in FIPS 186-3.
-version: 0.1.0
+version: 0.1.1
 homepage: https://github.com/c0mm4nd/dart-ecdsa
 
 environment:

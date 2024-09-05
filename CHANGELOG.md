@@ -1,3 +1,8 @@
+## 0.1.1
+
+- fix wrong v value on ethereum signature, thanks @josher8a and @fonstack
+- add tests for ethereum sign
+
 ## 0.1.0
 
 - update sdk limit
