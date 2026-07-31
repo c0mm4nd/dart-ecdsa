@@ -57,6 +57,27 @@ void main() {
           '83814198383102558219731078260892729932246618004265700685467928187377105751529');
     });
 
+    test('bitsToInt keeps leftmost bits for non-byte-aligned order', () {
+      // 66 bytes (528 bits) of 0xff, order bit length 521 -> drop 7 low bits.
+      var hash = List<int>.filled(66, 0xff);
+      expect(bitsToInt(hash, 521), equals((BigInt.one << 521) - BigInt.one));
+    });
+
+    test('bitsToInt truncates hashes longer than the order byte length', () {
+      // 40 bytes (320 bits) of 0xff, 256-bit order -> keep leftmost 256 bits.
+      var hash = List<int>.filled(40, 0xff);
+      expect(bitsToInt(hash, 256), equals((BigInt.one << 256) - BigInt.one));
+    });
+
+    test('randomized signature() is always low-S', () {
+      var priv = getS256().generatePrivateKey();
+      var hash = List<int>.generate(32, (i) => (i * 7) & 0xff);
+      for (var i = 0; i < 25; i++) {
+        var sig = signature(priv, hash);
+        expect(sig.S <= (priv.curve.n >> 1), isTrue);
+      }
+    });
+
     test('test rfc6979', () {
       var priv = PrivateKey(
           getS256(),
