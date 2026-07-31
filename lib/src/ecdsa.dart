@@ -47,6 +47,13 @@ Signature signature(PrivateKey priv, List<int> hash) {
     sig.S = sig.S + e;
     sig.S = sig.S * kInv;
     sig.S = sig.S % curve.n; // N != 0
+
+    // low-S normalization (BIP-62): keep s in the lower half of [1, n-1] so the
+    // signature is not malleable into (r, n-s).
+    if (sig.S > (curve.n >> 1)) {
+      sig.S = curve.n - sig.S;
+    }
+
     if (sig.S.sign != 0) {
       break;
     }
