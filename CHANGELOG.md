@@ -1,3 +1,13 @@
+## 0.2.0
+
+- **SECURITY**: `bitsToInt` now truncates using the order's byte length and
+  applies the excess right-shift (previously discarded as a no-op), fixing
+  hash/nonce derivation for curves whose order is not byte-aligned.
+- **SECURITY**: the randomized `signature()` now produces low-S signatures
+  (BIP-62) to avoid signature malleability.
+- Allow `elliptic` 0.4.x, which provides constant-time (Montgomery-ladder)
+  scalar multiplication.
+
 ## 0.1.2
 
 - add ecRecover

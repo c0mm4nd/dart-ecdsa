@@ -1,6 +1,7 @@
 BigInt bitsToInt(List<int> hash, int qBitLen) {
   var orderBytes = (qBitLen + 7) ~/ 8;
-  if (hash.length > qBitLen) {
+  // Keep only the leftmost orderBytes bytes of the hash.
+  if (hash.length > orderBytes) {
     hash = hash.sublist(0, orderBytes);
   }
 
@@ -8,9 +9,11 @@ BigInt bitsToInt(List<int> hash, int qBitLen) {
       List<String>.generate(
           hash.length, (i) => hash[i].toRadixString(16).padLeft(2, '0')).join(),
       radix: 16);
+  // Drop the excess low bits so the result has at most qBitLen bits (RFC 6979
+  // bits2int).
   var excess = hash.length * 8 - qBitLen;
   if (excess > 0) {
-    ret >> excess;
+    ret = ret >> excess;
   }
   return ret;
 }
