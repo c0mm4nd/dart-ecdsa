@@ -1,5 +1,17 @@
 # Dart-ECDSA
 
+> **⚠️ Security notice — please upgrade to ≥ 0.2.0**
+>
+> Versions **< 0.2.0** produced signatures without low-S normalization, so a
+> third party could malleate a signature into an equivalent `(r, n-s)` — a
+> problem for systems that treat the signature bytes as a unique identifier
+> (e.g. transaction IDs). `bitsToInt` was also incorrect for curve orders that
+> are not byte-aligned (e.g. P-521).
+>
+> **Key generation and nonces are not affected** (nonces use RFC 6979 /
+> `Random.secure()`, keys come from the elliptic package), and normal signing is
+> not exposed to key recovery. Upgrading is recommended.
+
 Package ecdsa implements the Elliptic Curve Digital Signature Algorithm, as defined in FIPS 186-3.
 
 This implementation derives the nonce from dartlang random.Secure() temporarily.
